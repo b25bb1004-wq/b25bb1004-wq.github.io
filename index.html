@@ -73,13 +73,13 @@ footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
 <div class="wrap">
   <header class="top">
     <span>arnav yadav · iit jodhpur</span>
-    <button class="theme" type="button" id="theme" aria-label="Switch colour theme">theme</button>
+    <button class="theme" type="button" id="theme" aria-label="Dark theme" aria-pressed="false">theme</button>
   </header>
 
   <main>
     <div class="hero">
       <h1>Arnav Yadav</h1>
-      <p class="lede">BTech student at IIT Jodhpur working on LLM training, evaluation and serving. I build the checks that tell you whether a model is right, and measure every claim on held-out data.</p>
+      <p class="lede">BTech student at IIT Jodhpur working on LLM training, evaluation and serving. I build the checks that tell you whether a model is right, and test results on data the model has not seen.</p>
       <ul class="links">
         <li class="primary"><a href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a></li>
         <li><a href="https://github.com/b25bb1004-wq">GitHub</a></li>
@@ -91,10 +91,10 @@ footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
       <h2 id="work">Selected work</h2>
       <ul class="work">
         <li>
-          <div class="receipt">26 of 31 repos<br>verified, 36 fixes</div>
+          <div class="receipt">26 of 31 repos verified<br>14 end-to-end</div>
           <div>
             <h3><a href="https://github.com/b25bb1004-wq/firstrun">HUMBLE</a></h3>
-            <p>Follows a repository's setup docs on a clean machine, repairs every step that breaks with evidence, replays the fixed guide from zero, and opens a PR with a README that provably works. Built on IBM Bob for the IBM Bob 2.0 Hackathon.</p>
+            <p>Follows a repository's setup docs on a clean machine, repairs every step that breaks with evidence, replays the fixed guide from zero, and opens a PR with a README that provably works. Verified 26 of 31 real repos (14 end-to-end, 12 waiting only on the user's input) and fixed 36 breaks. Built on IBM Bob for the IBM Bob 2.0 Hackathon.</p>
             <div class="tags"><a href="https://firstrun-sigma.vercel.app">live demo</a> · agents · Docker · TypeScript</div>
           </div>
         </li>
@@ -102,7 +102,7 @@ footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
           <div class="receipt">0.62 s vs 1.11 s<br>held-out 2025 season</div>
           <div>
             <h3><a href="https://github.com/b25bb1004-wq/F1-Pitstop_Strategy">Pitwall</a></h3>
-            <p>Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine on every F1 race from 2021 to 2025. Fitted on 2021-2023, tuned on 2024, tested once on 2025. Mean error 0.62 s over 109,883 in-race predictions, against 1.11 s for repeating the last lap.</p>
+            <p>Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine on every F1 race from 2021 to 2025. Fitted on 2021-2023, tuned on 2024, tested once on 2025. Mean absolute error 0.62 s over 109,883 in-race predictions, against 1.11 s for repeating the last lap.</p>
             <div class="tags"><a href="https://b25bb1004-wq.github.io/F1-Pitstop_Strategy/">live 3D app</a> · Python · dynamic programming · WebGL</div>
           </div>
         </li>
@@ -110,7 +110,7 @@ footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
           <div class="receipt">Private research<br>IIT Jodhpur</div>
           <div>
             <h3>Faith</h3>
-            <p>A small open model trained to answer research questions with citations a checker can verify: retrieval over a paper corpus, an entailment model, and a word-for-word quote test. Built as a benchmark, a verifier and a training loop; each claim is measured on held-out data, and rounds that did not beat the baseline are written up.</p>
+            <p>A small open model trained to answer research questions with citations a checker can verify: retrieval over a paper corpus, a natural language inference (NLI) model, and a word-for-word quote test. Built as a benchmark, a verifier and a training loop; each claim is measured on held-out data, and rounds that did not beat the baseline are written up.</p>
             <div class="tags">PyTorch · LoRA · vLLM · retrieval · evaluation</div>
           </div>
         </li>
@@ -126,7 +126,7 @@ footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
           <div class="receipt">5 models<br>one 12 GB GPU</div>
           <div>
             <h3>Local LLM serving and evaluation</h3>
-            <p>Benchmarked five open models on MMLU and HumanEval and served them behind one llama.cpp router that loads each on demand. A 35B mixture-of-experts model matched a 32B dense model on MMLU and ran several times faster on the same card.</p>
+            <p>Benchmarked five open models on MMLU and HumanEval and served them behind one llama.cpp router that loads each on demand. A 35B mixture-of-experts (MoE) model scored 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems.</p>
             <div class="tags">llama.cpp · vLLM · GGUF · RTX 5070</div>
           </div>
         </li>
@@ -168,7 +168,10 @@ footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
     var next = dark ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
     try { localStorage.setItem('theme', next); } catch (e) {}
+    btn.setAttribute('aria-pressed', String(next === 'dark'));
   });
+  btn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'dark' ||
+    (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)));
 })();
 </script>
 </body>
