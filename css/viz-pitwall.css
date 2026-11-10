@@ -1,1 +1,18 @@
-/* viz-pitwall.css: stub, written by a later worker */
+/* viz-pitwall.css: circuit, car, two error bars. Plot magenta is the accent; the baseline bar is soft ink. */
+.pw-map { max-height: 250px; }
+.pw-circ { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.pw-sf { stroke: var(--ink); stroke-width: 4; }
+.pw-trail { fill: var(--plot); }
+.pw-car { fill: var(--plot); stroke: #fff; stroke-width: 2; }
+.pw-bars { display: grid; gap: 16px; margin-top: 18px; }
+.pw-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.pw-lab { color: var(--soft); }
+.pw-val { margin: 0; padding-right: 1.5em; font: 600 clamp(1.05rem, 1.2vw + .6rem, 1.4rem)/1.2 var(--display); }
+.pw-rail { height: 14px; border-radius: 3px; background: var(--line); overflow: hidden; opacity: .9; }
+.pw-bar { display: block; height: 100%; border-radius: 3px 0 0 3px; transform-origin: 0 50%; will-change: transform; }
+.pw-m .pw-bar { background: var(--plot); }
+.pw-b .pw-bar { background: var(--soft); }
+.pw-foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.pw-n, .pw-held { margin: 0; }
+.pw-n { font-weight: 600; }
+.pw-held { color: var(--soft); }

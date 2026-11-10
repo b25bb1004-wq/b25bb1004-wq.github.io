@@ -106,6 +106,23 @@ a:hover { color: var(--draft); }
 .work-body .stack { color: var(--soft); font-size: .95em; }
 .work-links a { font-weight: 600; }
 .viz-slot { position: relative; min-width: 0; }
+/* before the figure fades in (below), a faint dashed outline marks where it will be; the panel covers it once visible */
+.anim .viz-slot:has(> .viz.has-viz)::before { content: ""; position: absolute; inset: 1px; border: 1.5px dashed var(--line); border-radius: 13px; }
+/* a section whose figure is still an empty stub shows no slot at all */
+.viz-slot:has(> .viz:empty) { display: none; }
+/* Pinned stage: the section is exactly one viewport tall, so the figure may not be taller than what is left
+   after the toolbar and padding. Most figures are about as wide as tall, hence the width cap. */
+@media (min-width: 900px) {
+  .viz-slot { width: 100%; max-width: calc((100svh - var(--bar-h) - 64px)); margin-inline: auto; }
+}
+@media (min-width: 900px) and (max-height: 700px) {
+  .work { padding-top: calc(var(--bar-h) + 12px); padding-bottom: 20px; }
+  .viz-slot { max-width: calc((100svh - var(--bar-h) - 36px)); }
+  .work-text { gap: 10px; }
+  .title { font-size: clamp(2rem, 2.2vw + 2vh, 3.2rem); }
+  .claim { font-size: clamp(1.2rem, .6vw + 1.4vh, 1.7rem); }
+  .work-body { gap: 8px; }
+}
 
 /* phone and narrow: stacked, figure right after the claim */
 @media (max-width: 899.98px) {
@@ -149,6 +166,8 @@ a:hover { color: var(--draft); }
 }
 .cur.is-work .cur-tab { opacity: 1; }
 
+/* section titles: the not-yet-typed part shows as a faint ghost of itself, so a title scrolling into view never reads as blank */
+.work .tw-b { visibility: visible; color: rgba(20, 33, 61, .13); }
 /* typing structure (built by core): real text stays in .tw-sr for assistive tech */
 .tw-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .tw-b { visibility: hidden; }

@@ -34,7 +34,7 @@ Folio.registerViz('humble', function (ctx) {
   var fins = q('.hm-fin'), path = figure.querySelector('.hm-scan path'), scanSvg = figure.querySelector('.hm-scan');
   var items = q('.hm-legend li'), nums = q('.hm-legend .num');
   var breaks = figure.querySelector('.hm-breaks'), breaksNum = breaks.querySelector('.num');
-  var verdict = figure.querySelector('.hm-verdict');
+  var verdict = figure.querySelector('.hm-verdict'), foot = figure.querySelector('.hm-foot'), legend = figure.querySelector('.hm-legend');
 
   // the scan line is only visible while Data draws it; CSS leaves it at opacity 0 so the end state is clean
   var sweep = h.draw(tl, A.data, path, { dur: 7 }, 0);
@@ -49,6 +49,8 @@ Folio.registerViz('humble', function (ctx) {
 
   // Data moves to the legend and places the numbers; the rows fade in just ahead of the counts
   h.go(tl, A.data, nums[0], { at: [1, 0.5], dx: 14, dur: 1.2 }, sweep.end - 0.4);
+  // the legend box and the foot rule fade in with their content, so no border or swatch shows early
+  tl.fromTo([legend, foot], { opacity: 0 }, { opacity: 1, ease: 'power1.out', duration: 0.4 }, 7.1);
   tl.fromTo(items, { opacity: 0, y: 8 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.5, stagger: 0.12 }, 7.2);
   tl.fromTo(breaks, { opacity: 0 }, { opacity: 1, ease: 'power1.out', duration: 0.4 }, 7.9);
   h.count(tl, nums[0], { to: 14, dur: 0.9 }, 7.7);

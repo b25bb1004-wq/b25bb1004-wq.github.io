@@ -290,7 +290,8 @@
   }
   function updWork(S) {                         // pure function of master time, so scrubbing back restores it
     var t = S.master.time(), now = {};
-    S.marks.forEach(function (m) { if (t >= m.a && t < m.b) now[m.k] = 1; });
+    // a master parked at 0 (not reached yet) or at its end has nobody working, even if a move starts at 0
+    if (t > 0 && t < S.master.duration()) S.marks.forEach(function (m) { if (t >= m.a && t < m.b) now[m.k] = 1; });
     S.now = now;
     KEYS.forEach(function (k) { var A = S.agents[k]; if (A.el) A.el.classList.toggle('is-work', !!now[k]); });
     refreshChips();
@@ -377,7 +378,7 @@
     var vend = v0 + VIZ_LEN;
 
     // 4. the claim settles
-    if (desktop && claim) m.fromTo(claim, { opacity: 0.4 }, { opacity: 1, ease: 'power2.out', duration: 0.8 }, vend);
+    if (desktop && claim) m.fromTo(claim, { opacity: 0.55 }, { opacity: 1, ease: 'power2.out', duration: 0.8 }, vend);
     var xe = vend + (desktop ? 0.8 : 0.2);
     exits(S, m, xe);
     m.to({}, { duration: 0 }, xe + 1.4 + 1.0);   // hold on the finished state before the pin releases

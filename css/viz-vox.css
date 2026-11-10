@@ -1,1 +1,24 @@
-/* viz-vox.css: stub, written by a later worker */
+/* viz-vox.css: voice waveform, transcript, four tool chips, award line. Accent is Draft cobalt. */
+.vx-top { display: grid; grid-template-columns: minmax(0, 34fr) minmax(0, 62fr); gap: 4%; align-items: start; }
+.vx-lab { margin: 0 0 8px; color: var(--soft); font-size: 13px; }
+.vx-wave { display: flex; align-items: center; gap: 2px; height: 64px; }
+.vx-wave i { flex: 1 1 0; min-width: 2px; max-width: 5px; height: var(--h); border-radius: 2px; background: var(--draft); will-change: transform; }
+.vx-tr { margin: 0; min-height: 64px; font: 500 clamp(1rem, .5vw + .85rem, 1.15rem)/1.35 var(--text); }
+.vx-lines { margin: 8px 0 0; }
+.vx-lines path { fill: none; stroke: var(--draft); stroke-width: 2; stroke-linecap: round; opacity: .7; }
+.vx-tools { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; }
+.vx-tools li {
+  position: relative; margin: 0 4px; padding: 10px 4px; text-align: center; font-weight: 600; font-size: 13px; line-height: 1.2;
+  border: 1.5px solid var(--line); border-radius: 10px; background: var(--panel); min-height: 44px; display: flex; align-items: center; justify-content: center;
+}
+.vx-tools li span { position: relative; z-index: 1; }
+.vx-lit { position: absolute; inset: -1.5px; border: 1.5px solid var(--draft); border-radius: 10px; background: rgba(47, 91, 255, .09); }
+.vx-award { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--line); }
+.vx-a { font: 700 clamp(1.15rem, 1.2vw + .7rem, 1.5rem)/1.2 var(--display); margin-right: .4em; }
+.vx-ev { color: var(--soft); }
+.vx-award .tick { font-size: 1.2rem; vertical-align: -.2em; margin-right: 2em; }
+@media (max-width: 899.98px) {
+  .vx-top { grid-template-columns: minmax(0, 32fr) minmax(0, 64fr); }
+  .vx-tools li { font-size: 12.5px; padding: 8px 2px; margin: 0 3px; }
+}
+.work .vx-tr .tw-b { visibility: hidden; }
