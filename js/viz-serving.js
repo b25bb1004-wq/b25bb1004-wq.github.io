@@ -37,9 +37,11 @@ Folio.registerViz('serving', function (ctx) {
     h.go(tl, L, rowEls[k], { at: [0.35, 0.5], dur: 0.5 }, t);
     tl.fromTo(hls[k], { opacity: 0 }, { opacity: 1, ease: 'power1.out', duration: 0.2 }, t + 0.2);
     h.go(tl, L, slot, { dur: 0.5 }, t + 0.5);
-    tl.fromTo(blks[k], { x: 90, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', duration: 0.45 }, t + 0.5);
+    // the outgoing block is fully gone (0.3 s) before the incoming label starts to show, so two labels are never readable together
+    tl.fromTo(blks[k], { x: 70 }, { x: 0, ease: 'power2.out', duration: 0.45 }, t + 0.5);
+    tl.fromTo(blks[k], { opacity: 0 }, { opacity: 1, ease: 'power1.out', duration: 0.25 }, t + 0.78);
     if (k > 0) {
-      tl.fromTo(blks[k - 1], { x: 0, opacity: 1 }, { x: -90, opacity: 0, ease: 'power2.in', duration: 0.4, immediateRender: false }, t + 0.5);
+      tl.fromTo(blks[k - 1], { x: 0, opacity: 1 }, { x: -70, opacity: 0, ease: 'power1.in', duration: 0.3, immediateRender: false }, t + 0.45);
       tl.fromTo(hls[k - 1], { opacity: 1 }, { opacity: 0, ease: 'power1.in', duration: 0.2, immediateRender: false }, t + 0.2);
     }
   }

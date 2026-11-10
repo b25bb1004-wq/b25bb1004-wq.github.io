@@ -238,7 +238,7 @@
     });
     tl.add(tw, pos);
     var s = span(tw);
-    if (S && S.agents.data) mark(tl, S.agents.data, s.start, s.end);
+    if (S && S.agents.data.on) mark(tl, S.agents.data, s.start, s.end);
     return s;
   };
 
@@ -275,17 +275,26 @@
     g.fromTo(pth, { attr: { 'stroke-dasharray': 1, 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dasharray': 1, 'stroke-dashoffset': 0 }, ease: 'power1.out', duration: 0.3, immediateRender: true }, d0 + 0.08);
     g.to({}, { duration: 0 }, d0 + 0.5);
     tl.add(g, pos);
-    var s = span(g); if (C) mark(tl, C, s.start, s.start + d0 + 0.35);
+    var s = span(g); if (C && C.on) mark(tl, C, s.start, s.start + d0 + 0.35);
     return s;
   };
 
   /* ---------- who is working: chips, name tabs ---------- */
 
   var chips = [];
+  function nearest() {                          // the section whose centre is closest to the viewport centre
+    var mid = window.innerHeight / 2, best = null, bd = 1e9;
+    secs.forEach(function (S) {
+      var r = S.el.getBoundingClientRect(), d = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (d < bd) { bd = d; best = S; }
+    });
+    return best;
+  }
   function refreshChips() {
+    var cur = nearest();
     chips.forEach(function (c) {
-      var k = c.getAttribute('data-agent'), on = secs.some(function (S) { return S.now[k]; });
-      c.classList.toggle('on', on);
+      var k = c.getAttribute('data-agent'), A = cur && cur.agents[k];
+      c.classList.toggle('on', !!(A && A.on && cur.now[k]));
     });
   }
   function updWork(S) {                         // pure function of master time, so scrubbing back restores it
@@ -300,12 +309,37 @@
     return (list || []).map(function (m) { return { k: m.k, a: off + m.a * scale, b: off + m.b * scale }; });
   }
 
+  /* Name tabs flip to the cursor's left side whenever they would cross the figure's or the viewport's right edge.
+     A pure function of the cursor's x, so scrubbing in either direction restores it. */
+  function limits(S) {
+    if (!S.lim) S.lim = memo(S, function () {
+      var cr = S.cast.getBoundingClientRect(), o = { vp: document.documentElement.clientWidth - cr.left - 6 };
+      if (S.figure) { var fr = S.figure.getBoundingClientRect(); o.l = fr.left - cr.left; o.r = fr.right - cr.left; }
+      return o;
+    });
+    return S.lim();
+  }
+  function flipTabs() {
+    secs.forEach(function (S) {
+      if (!S.vis || !S.vis.isActive || !S.used.length) return;
+      var lim = limits(S);
+      S.used.forEach(function (A) {
+        if (!A.el) return;
+        if (!A.tw) A.tw = A.tab.offsetWidth + 20;         // tab width plus its 14 px offset and a margin
+        var x = gsap.getProperty(A.el, 'x'), edge = lim.vp;
+        if (lim.r && x > lim.l - 24 && x < lim.r) edge = Math.min(edge, lim.r - 4);
+        var f = x + A.tw > edge;
+        if (f !== !!A.flip) { A.flip = f; A.el.classList.toggle('flip', f); }
+      });
+    });
+  }
+
   /* ---------- section state ---------- */
 
   function makeS(el, o) {
     var fig = el.querySelector('figure.viz'), S = {
       el: el, id: el.id, cast: el.querySelector('.cast'), figure: fig, slot: fig && fig.parentNode,
-      frame: fig || el.querySelector('.hero-in'), stamp: 0, used: [], cleanups: [], now: {}, marks: [],
+      frame: fig || el.querySelector('.hero-in') || el.querySelector('.method-in'), stamp: 0, used: [], cleanups: [], now: {}, marks: [],
       final: o.final, phone: o.phone, agents: {}, master: null
     };
     var lead = LEAD[el.id], enabled = {};
@@ -387,7 +421,7 @@
     m.eventCallback('onUpdate', function () { updWork(S); });
 
     var vars = desktop
-      ? { trigger: S.el, start: 'top top', end: '+=180%', pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true, animation: m }
+      ? { trigger: S.el, start: 'top top', end: '+=120%', pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true, animation: m }
       : { trigger: fig, start: 'top 85%', end: 'center 40%', scrub: 0.6, invalidateOnRefresh: true, animation: m };
     S.st = ST.create(vars);
 
@@ -395,40 +429,167 @@
     var drifts = S.used.map(function (a, i) {
       return gsap.to(a.drift, { x: 2.5, y: 3, duration: 1.7 + i * 0.35, ease: 'sine.inOut', repeat: -1, yoyo: true, paused: true });
     });
-    ST.create({ trigger: S.el, start: 'top bottom', end: 'bottom top', onToggle: function (self) { drifts.forEach(function (d) { self.isActive ? d.play() : d.pause(); }); } });
+    S.vis = ST.create({ trigger: S.el, start: 'top bottom', end: 'bottom top', onToggle: function (self) { drifts.forEach(function (d) { self.isActive ? d.play() : d.pause(); }); } });
   }
 
+  /* The hero. The crew assembles the name: every letter starts scattered over the hero and an agent's cursor carries
+     it home (two letters per agent, at most two cursors moving at once, found by `fit`). Then Draft types the intro,
+     Layout nudges the links, Check ticks the intro. One time-driven timeline; any scroll or key skips to the end.
+     Afterwards, on fine pointers, the cursors follow the visitor's mouse as a loose flock. */
+  var SCAT = [[.08, .2], [.2, .78], [.33, .16], [.45, .86], [.57, .24], [.68, .8], [.8, .18], [.9, .7], [.14, .5], [.84, .46]];
+  var ROT = [-34, 28, -18, 41, -27, 15, 38, -41, 22, -12];
+  var FLOCK = [[-40, -30], [36, -38], [54, 8], [-6, 42], [-52, 18]];          // fixed offsets by agent index, so followers never stack
+  var A_FIRST = 0.32, A_ARR = 0.22, A_CAR = 0.32;                              // carry the first letter at once, later ones arrive first
+
   function buildHero(S) {
-    var A = S.agents, h1 = S.el.querySelector('h1'), intro = S.el.querySelector('.intro'),
-      lis = S.el.querySelectorAll('.links li'), tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
+    var A = S.agents, h1 = S.el.querySelector('h1'), intro = S.el.querySelector('.intro'), lis = S.el.querySelectorAll('.links li'),
+      tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
     S.master = tl;
-    // Draft types the name; the intro and links wait their turn
-    H.type(tl, A.draft, h1, { dur: 1.7 }, 0.1);
-    tl.fromTo(intro, { opacity: 0, y: 10 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.6 }, 1.3);
-    // Layout nudges the links into place
-    tl.fromTo(lis, { opacity: 0, x: -16 }, { opacity: 1, x: 0, ease: 'back.out(1.6)', duration: 0.45, stagger: 0.18 }, 1.7);
-    H.go(tl, A.layout, lis[0], { at: [0, 0.5], dx: -8, dur: 0.9 }, 0.9);
-    H.go(tl, A.layout, lis[lis.length - 1], { at: [1, 0.5], dx: 10, dur: 0.9, ease: ['power2.inOut', 'power2.inOut'], click: false }, 1.7);
-    H.park(tl, A.layout, 2.7);
-    // Check ticks the intro
-    H.tick(tl, intro, 2.3);
-    // the rest of the crew arrives and idles
-    H.park(tl, A.plot, 2.9);
-    H.park(tl, A.data, 3.1);
-    H.park(tl, A.draft, 1.9);
-    H.park(tl, A.check, 3.4);
+
+    // the name: real text on the h1 (aria-label), one inline-block span per letter (aria-hidden)
+    var label = h1.textContent.replace(/\s+/g, ' ').trim(), orig = h1.innerHTML, chars = [], pre = [];
+    var tn0 = h1.firstChild, rg = document.createRange();           // pen positions of the unsplit text, to put kerning back afterwards
+    for (var q = 0; q < label.length; q++) { rg.setStart(tn0, q); rg.setEnd(tn0, q + 1); pre.push(rg.getBoundingClientRect().left); }
+    h1.setAttribute('aria-label', label); h1.textContent = '';
+    label.split(' ').forEach(function (w, wi) {
+      if (wi) h1.appendChild(document.createTextNode(' '));
+      var ws = document.createElement('span'); ws.className = 'hw'; ws.setAttribute('aria-hidden', 'true');
+      w.split('').forEach(function (c) { var s = document.createElement('span'); s.className = 'hc'; s.textContent = c; ws.appendChild(s); chars.push(s); });
+      h1.appendChild(ws);
+    });
+    S.cleanups.push(function () { h1.innerHTML = orig; h1.removeAttribute('aria-label'); });
+    var n = chars.length, fs = parseFloat(getComputedStyle(h1).fontSize), now = chars.map(function (c) { return c.getBoundingClientRect().left; }), idx = 0;
+    label.split(' ').forEach(function (w, wi) {                      // kerning lost at the span boundaries, restored as a margin in em
+      for (var j = 1; j < w.length; j++) chars[idx + j].style.marginLeft = (((pre[idx + j + wi] - pre[idx + j + wi - 1]) - (now[idx + j] - now[idx + j - 1])) / fs).toFixed(4) + 'em';
+      idx += w.length;
+    });
+
+    // letter geometry in .hero-in coordinates: natural centre, and displacement to its scattered spot
+    var G = memo(S, function () {
+      var cr = S.cast.getBoundingClientRect(), fr = S.frame.getBoundingClientRect(), vh = Math.min(cr.height, window.innerHeight),
+        g = { w: [], h: [], cx: [], cy: [], dx: [], dy: [] };
+      chars.forEach(function (c, i) {
+        var sc = SCAT[(i * 3) % SCAT.length];
+        g.w.push(c.offsetWidth); g.h.push(c.offsetHeight);
+        g.cx.push(h1.offsetLeft + c.offsetLeft + c.offsetWidth / 2); g.cy.push(h1.offsetTop + c.offsetTop + c.offsetHeight / 2);
+        g.dx.push(sc[0] * cr.width - (fr.left - cr.left) - g.cx[i]); g.dy.push(sc[1] * vh - (fr.top - cr.top) - g.cy[i]);
+      });
+      return g;
+    });
+    function pick(i) { return function () { var g = G(); return { x: g.cx[i] + g.dx[i] + g.w[i] * 0.22, y: g.cy[i] + g.dy[i] + g.h[i] * 0.18 }; }; }
+    function drop(i) { return function () { var g = G(); return { x: g.cx[i] + g.w[i] * 0.22, y: g.cy[i] + g.h[i] * 0.18 }; }; }
+
+    // the letter travels exactly as its cursor does (same eases, same overshoot), plus a small rotation settle
+    function carry(i, Ak, at) {
+      var ch = chars[i], e = Ak.idx % 2 ? ['power3.inOut', 'power2.out'] : ['power2.out', 'power3.inOut'], td = A_CAR * 0.85;
+      var V = memo(S, function () { var g = G(), dx = g.dx[i], dy = g.dy[i], d = Math.hypot(dx, dy) || 1, ov = Math.min(8, d * 0.06); return { dx: dx, dy: dy, ox: -dx / d * ov, oy: -dy / d * ov }; });
+      tl.fromTo(ch, { x: function () { return V().dx; } }, { x: function () { return V().ox; }, ease: e[0], duration: td }, at);
+      tl.fromTo(ch, { y: function () { return V().dy; } }, { y: function () { return V().oy; }, ease: e[1], duration: td }, at);
+      tl.fromTo(ch, { x: function () { return V().ox; }, y: function () { return V().oy; } }, { x: 0, y: 0, ease: 'power2.out', duration: A_CAR * 0.15, immediateRender: false }, at + td);
+      tl.fromTo(ch, { rotation: ROT[i] }, { rotation: 0, ease: 'back.out(2.4)', duration: A_CAR * 0.95 }, at);
+      tl.fromTo(ch, { opacity: 0.3 }, { opacity: 1, ease: 'power1.out', duration: A_CAR * 0.7 }, at);
+    }
+
+    // scheduler: earliest start >= `from` where fewer than two cursor jobs overlap anywhere in [t, t+len]
+    var busy = [], free = {};
+    function fit(len, from) {
+      for (var t = from; ; t += 0.02) {
+        var ok = true;
+        for (var s = t + 0.01; s < t + len; s += 0.02) {
+          var c = 0; busy.forEach(function (w) { if (s > w[0] && s < w[1]) c++; });
+          if (c > 1) { ok = false; break; }
+        }
+        if (ok) { busy.push([t, t + len]); return t; }
+      }
+    }
+    var crew = KEYS.filter(function (k) { return A[k].on; }), mine = {};
+    crew.forEach(function (k) { mine[k] = []; });
+    for (var i = 0; i < n; i++) mine[crew[Math.floor(i * crew.length / n)]].push(i);
+    ['plot', 'data', 'draft', 'layout', 'check'].filter(function (k) { return A[k].on; }).forEach(function (k) {
+      var Ak = A[k], list = mine[k], len = A_FIRST + (list.length - 1) * (A_ARR + A_CAR), p = fit(len, 0), t0 = p;
+      Ak.at = targetFn(S, pick(list[0]));          // the cursor waits on its first letter from the start
+      list.forEach(function (li, j) {
+        if (j) { H.go(tl, Ak, pick(li), { dur: A_ARR, click: false }, p); p += A_ARR; }
+        H.go(tl, Ak, drop(li), { dur: j ? A_CAR : A_FIRST, click: false }, p);
+        carry(li, Ak, p); p += A_CAR;
+      });
+      free[k] = t0 + len;
+    });
+
+    // Draft types the intro, Layout nudges the links in, Check ticks the intro
+    var tt = fit(1.1, free.draft);
+    H.type(tl, A.draft, intro, { dur: 1.1 }, tt);
+    var tn = fit(0.95, Math.max(free.layout, tt + 0.6));
+    tl.fromTo(lis, { opacity: 0, x: -16 }, { opacity: 1, x: 0, ease: 'back.out(1.6)', duration: 0.4, stagger: 0.16 }, tn + 0.2);
+    H.go(tl, A.layout, lis[0], { at: [0, 0.5], dx: -8, dur: 0.45, click: false }, tn);
+    H.go(tl, A.layout, lis[lis.length - 1], { at: [1, 0.5], dx: 10, dur: 0.5, ease: ['power2.inOut', 'power2.inOut'], click: false }, tn + 0.45);
+    var tk = fit(1.05, Math.max(free.check, tt + 1.0));
+    H.tick(tl, intro, tk);
+    var tp = fit(0.45, tt + 1.1);                  // Draft steps off the end of the intro so Check's mark is not covered
+    H.go(tl, A.draft, function () { var fr = S.frame.getBoundingClientRect(); return { x: -26, y: fr.height * 0.5 }; }, { dur: 0.45, click: false }, tp);
+
     S.marks = mapMarks(tl.__m, 0, 1);
     tl.eventCallback('onUpdate', function () { updWork(S); });
-    // the pre-state is already applied (immediateRender, empty typed copy); now let the page show it
+    S.vis = ST.create({ trigger: S.el, start: 'top bottom', end: 'bottom top' });
+
+    // pointer flock (fine pointers only), armed once the sequence has finished
+    var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches, on = false, rest = null, qx = {}, qy = {};
+    function release() {
+      if (!on) return; on = false;
+      S.used.forEach(function (Ak) {
+        gsap.killTweensOf(Ak.el, 'x,y'); Ak.el.classList.remove('is-follow');
+        gsap.to(Ak.el, { x: rest[Ak.key].x, y: rest[Ak.key].y, duration: 0.8, delay: Ak.idx * 0.05, ease: 'power3.inOut' });
+      });
+    }
+    function onMove(e) {
+      if (tl.progress() < 1 || window.scrollY > S.el.offsetHeight * 0.6) return;
+      var cr = S.cast.getBoundingClientRect();
+      if (!on) {
+        on = true; if (!rest) { rest = {}; S.used.forEach(function (Ak) { rest[Ak.key] = { x: gsap.getProperty(Ak.el, 'x'), y: gsap.getProperty(Ak.el, 'y') }; }); }
+        S.used.forEach(function (Ak) {
+          gsap.killTweensOf(Ak.el, 'x,y'); Ak.el.classList.add('is-follow');
+          var o = { duration: 0.32 + Ak.idx * 0.12, ease: 'power3.out' }; qx[Ak.key] = gsap.quickTo(Ak.el, 'x', o); qy[Ak.key] = gsap.quickTo(Ak.el, 'y', o);
+        });
+      }
+      S.used.forEach(function (Ak) { qx[Ak.key](e.clientX - cr.left + FLOCK[Ak.idx][0]); qy[Ak.key](e.clientY - cr.top + FLOCK[Ak.idx][1]); });
+    }
+    function onFar() { if (on && window.scrollY > S.el.offsetHeight * 0.6) release(); }
+    if (fine) {
+      S.el.addEventListener('mousemove', onMove); S.el.addEventListener('mouseleave', release); window.addEventListener('scroll', onFar, { passive: true });
+      S.cleanups.push(function () { S.el.removeEventListener('mousemove', onMove); S.el.removeEventListener('mouseleave', release); window.removeEventListener('scroll', onFar); });
+    }
+
+    // the pre-state is already applied (scattered letters, empty typed copy); now let the page show it
     document.documentElement.classList.add('ready');
     var skip = function () { tl.progress(1); off(); };
     var evs = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
-    function off() { evs.forEach(function (e) { window.removeEventListener(e, skip); }); window.removeEventListener('scroll', onScroll); }
-    function onScroll() { if (window.scrollY > 8) skip(); }
+    function off() { evs.forEach(function (e) { window.removeEventListener(e, skip); }); window.removeEventListener('scroll', onSkipScroll); }
+    function onSkipScroll() { if (window.scrollY > 8) skip(); }
     evs.forEach(function (e) { window.addEventListener(e, skip, { passive: true, once: true }); });
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onSkipScroll, { passive: true });
     S.cleanups.push(off);
+    S.busy = busy;
     tl.play(0);
+  }
+
+  /* #method: unpinned and quiet. Scrubbed with the scroll: the rule above each principle draws left to right, Check ticks its heading. */
+  function buildMethod(S) {
+    var el = S.el, items = el.querySelectorAll('.principles li'), m = gsap.timeline({ paused: true, defaults: { ease: 'none' } }), rules = [];
+    S.master = m;
+    Array.prototype.forEach.call(items, function (li) {
+      var r = document.createElement('i'); r.className = 'rule'; r.setAttribute('aria-hidden', 'true'); li.insertBefore(r, li.firstChild); rules.push(r);
+    });
+    el.classList.add('has-rules');
+    S.cleanups.push(function () { rules.forEach(function (r) { r.remove(); }); el.classList.remove('has-rules'); });
+    Array.prototype.forEach.call(items, function (li, i) {
+      m.fromTo(rules[i], { scaleX: 0 }, { scaleX: 1, ease: 'power2.inOut', duration: 0.9 }, i * 1.5);
+      H.tick(m, li.querySelector('strong'), i * 1.5 + 0.5);
+    });
+    exits(S, m, 4.9);
+    S.marks = mapMarks(m.__m, 0, 1);
+    m.eventCallback('onUpdate', function () { updWork(S); });
+    S.st = ST.create({ trigger: el.querySelector('.principles'), start: 'top 82%', end: 'clamp(bottom 55%)', scrub: 0.6, invalidateOnRefresh: true, animation: m });
+    S.vis = ST.create({ trigger: el, start: 'top bottom', end: 'bottom top' });
   }
 
   /* ---------- mount ---------- */
@@ -441,10 +602,14 @@
       var line = document.querySelector('#bar .progress i');
       if (line) gsap.to(line, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: document.documentElement, start: 0, end: function () { return ST.maxScroll(window); }, scrub: 0.3 } });
     }
-    Array.prototype.forEach.call(document.querySelectorAll('#hero, .work'), function (el) {
+    Array.prototype.forEach.call(document.querySelectorAll('#hero, .work, #method'), function (el) {
       var S = makeS(el, { final: reduce, phone: !desktop });
       if (el.id === 'hero') {
-        if (!reduce) { local.push(S); buildHero(S); }
+        if (!reduce) { bySection.set(el, S); local.push(S); buildHero(S); }
+        return;
+      }
+      if (el.id === 'method') {
+        if (!reduce) { bySection.set(el, S); local.push(S); buildMethod(S); }
         return;
       }
       var build = builders[S.figure && S.figure.getAttribute('data-viz')];
@@ -467,7 +632,8 @@
     if (!gsap || !ST) return;                   // vendor scripts missing: the page is plain text, which is fine
     gsap.registerPlugin(ST);
     ST.config({ ignoreMobileResize: true });
-    ST.addEventListener('refreshInit', function () { secs.forEach(function (S) { S.stamp++; }); });
+    ST.addEventListener('refreshInit', function () { secs.forEach(function (S) { S.stamp++; S.used.forEach(function (A) { A.tw = 0; }); }); });
+    gsap.ticker.add(flipTabs);
     ST.addEventListener('refresh', function () {   // events are suppressed during refresh; re-render so typed text and counts match the playhead
       secs.forEach(function (S) { if (S.st && S.master) { S.master.render(S.master.time(), false, true); updWork(S); } });
     });
@@ -488,11 +654,12 @@
 
   function registerViz(name, build) {
     builders[name] = build;
-    if (mounted) { mm.kill(); mounted = false; mm = gsap.matchMedia(); mm.add(MQ, mount); mounted = true; ST.refresh(); }
+    if (mounted) { mm.revert(); mm.kill(); mounted = false; mm = gsap.matchMedia(); mm.add(MQ, mount); mounted = true; ST.refresh(); }
   }
   var Folio = { agents: KEYS.slice(), h: H, registerViz: registerViz, refresh: function () { if (ST) ST.refresh(); } };
   window.Folio = Folio;
   ((stub && stub._q) || []).forEach(function (q) { builders[q[0]] = q[1]; });
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  // deferred scripts run while readyState is 'interactive', before DOMContentLoaded: wait for it so all figures are registered before the single mount
+  if (document.readyState === 'complete') start(); else document.addEventListener('DOMContentLoaded', start);
 })();
