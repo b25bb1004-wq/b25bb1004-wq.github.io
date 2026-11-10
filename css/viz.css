@@ -1,0 +1,13 @@
+/* viz.css: shared figure styles. Per-figure rules live in css/viz-<id>.css */
+.viz {
+  position: relative; margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: clamp(14px, 1.8vw, 26px); color: var(--ink); font-size: 15px; line-height: 1.4;
+}
+.viz:empty { display: none; }
+.viz svg { display: block; width: 100%; height: auto; overflow: visible; }
+.viz .num { font-variant-numeric: tabular-nums; font-weight: 700; display: inline-block; }
+.viz .mono { font-family: var(--mono); font-size: .92em; }
+.viz figcaption, .viz .cap { color: var(--soft); font-size: 14px; margin-top: 12px; }
+.viz .legend { display: grid; gap: 8px; margin-top: 16px; }
+.viz .legend li { display: flex; align-items: center; gap: 10px; }
+@media (max-width: 899.98px) { .viz { font-size: 14px; } }

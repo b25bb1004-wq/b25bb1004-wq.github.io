@@ -3,176 +3,194 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arnav Yadav · ML systems</title>
+<title>Arnav Yadav, ML systems</title>
 <meta name="description" content="Arnav Yadav, BTech at IIT Jodhpur. LLM training, evaluation and serving: citation-verified research models, local LLM serving, voice agents.">
-<meta property="og:title" content="Arnav Yadav · ML systems">
+<meta property="og:title" content="Arnav Yadav, ML systems">
 <meta property="og:description" content="Verified-citation research models, local LLM serving, voice agents. Every number measured on held-out data.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://b25bb1004-wq.github.io/">
 <link rel="canonical" href="https://b25bb1004-wq.github.io/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316181d'/%3E%3Cpath d='M8 24 16 8l8 16M11.5 18h9' stroke='%23e8a04a' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<style>
-:root {
-  --bg: #f6f3ec; --ink: #16181d; --muted: #5d6068; --rule: #d9d4c7; --accent: #b0481c; --accent-ink: #fff;
-  --panel: #fffdf8;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-}
-:root[data-theme="dark"] {
-  --bg: #111317; --ink: #ebe8e1; --muted: #a4a29b; --rule: #2c2f36; --accent: #e8a04a; --accent-ink: #111317;
-  --panel: #171a1f;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #111317; --ink: #ebe8e1; --muted: #a4a29b; --rule: #2c2f36; --accent: #e8a04a; --accent-ink: #111317;
-    --panel: #171a1f;
-  }
-}
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--sans); }
-a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
-a:hover { color: var(--accent); }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-.wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
-header.top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; font: 14px var(--mono); color: var(--muted); }
-button.theme { background: none; border: 1px solid var(--rule); color: var(--muted); font: 13px var(--mono); padding: 6px 10px; border-radius: 4px; cursor: pointer; min-height: 36px; }
-button.theme:hover { color: var(--ink); border-color: var(--muted); }
-.hero { padding: 44px 0 36px; border-bottom: 1px solid var(--rule); }
-h1 { font: 600 clamp(34px, 7vw, 56px)/1.05 var(--serif); letter-spacing: -0.01em; margin: 0 0 14px; }
-.lede { font: clamp(19px, 3vw, 24px)/1.4 var(--serif); max-width: 34em; margin: 0 0 22px; }
-.links { display: flex; flex-wrap: wrap; gap: 10px 18px; font: 15px var(--mono); margin: 0; padding: 0; list-style: none; }
-.links a { display: inline-block; padding: 8px 0; }
-.links .primary a { background: var(--accent); color: var(--accent-ink); text-decoration: none; padding: 8px 14px; border-radius: 4px; }
-.links .primary a:hover { color: var(--accent-ink); filter: brightness(1.08); }
-h2 { font: 600 13px var(--mono); text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 0 0 18px; }
-section { padding: 36px 0; border-bottom: 1px solid var(--rule); }
-.work { list-style: none; margin: 0; padding: 0; }
-.work li { display: grid; grid-template-columns: 150px 1fr; gap: 6px 24px; padding: 16px 0; border-top: 1px solid var(--rule); }
-.work li:first-child { border-top: 0; padding-top: 0; }
-.receipt { font: 600 15px/1.35 var(--mono); color: var(--accent); }
-.work h3 { font: 600 20px/1.25 var(--serif); margin: 0 0 4px; }
-.work p { margin: 0; color: var(--muted); }
-.work .tags { font: 13px var(--mono); margin-top: 6px; color: var(--muted); }
-.principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 0; padding: 0; list-style: none; }
-.principles strong { display: block; font: 600 17px var(--serif); margin-bottom: 4px; }
-.principles span { color: var(--muted); font-size: 15px; }
-.also { margin: 0; color: var(--muted); font-size: 15px; }
-footer { padding: 28px 0 56px; font: 13px var(--mono); color: var(--muted); }
-@media (max-width: 640px) {
-  body { font-size: 16px; }
-  .work li { grid-template-columns: 1fr; gap: 2px; }
-  .principles { grid-template-columns: 1fr; gap: 16px; }
-  .hero { padding-top: 28px; }
-}
-@media (prefers-reduced-motion: no-preference) { a, button { transition: color .15s, border-color .15s; } }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header class="top">
-    <span>arnav yadav · iit jodhpur</span>
-    <button class="theme" type="button" id="theme" aria-label="Dark theme" aria-pressed="false">theme</button>
-  </header>
-
-  <main>
-    <div class="hero">
-      <h1>Arnav Yadav</h1>
-      <p class="lede">BTech student at IIT Jodhpur working on LLM training, evaluation and serving. I build the checks that tell you whether a model is right, and test results on data the model has not seen.</p>
-      <ul class="links">
-        <li class="primary"><a href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a></li>
-        <li><a href="https://github.com/b25bb1004-wq">GitHub</a></li>
-        <li><a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a></li>
-      </ul>
-    </div>
-
-    <section aria-labelledby="work">
-      <h2 id="work">Selected work</h2>
-      <ul class="work">
-        <li>
-          <div class="receipt">26 of 31 repos verified<br>14 end-to-end</div>
-          <div>
-            <h3><a href="https://github.com/b25bb1004-wq/firstrun">HUMBLE</a></h3>
-            <p>Follows a repository's setup docs on a clean machine, repairs every step that breaks with evidence, replays the fixed guide from zero, and opens a PR with a README that provably works. Verified 26 of 31 real repos (14 end-to-end, 12 waiting only on the user's input) and fixed 36 breaks. Built on IBM Bob for the IBM Bob 2.0 Hackathon.</p>
-            <div class="tags"><a href="https://firstrun-sigma.vercel.app">live demo</a> · agents · Docker · TypeScript</div>
-          </div>
-        </li>
-        <li>
-          <div class="receipt">0.62 s vs 1.11 s<br>held-out 2025 season</div>
-          <div>
-            <h3><a href="https://github.com/b25bb1004-wq/F1-Pitstop_Strategy">Pitwall</a></h3>
-            <p>Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine on every F1 race from 2021 to 2025. Fitted on 2021-2023, tuned on 2024, tested once on 2025. Mean absolute error 0.62 s over 109,883 in-race predictions, against 1.11 s for repeating the last lap.</p>
-            <div class="tags"><a href="https://b25bb1004-wq.github.io/F1-Pitstop_Strategy/">live 3D app</a> · Python · dynamic programming · WebGL</div>
-          </div>
-        </li>
-        <li>
-          <div class="receipt">Private research<br>IIT Jodhpur</div>
-          <div>
-            <h3>Faith</h3>
-            <p>A small open model trained to answer research questions with citations a checker can verify: retrieval over a paper corpus, a natural language inference (NLI) model, and a word-for-word quote test. Built as a benchmark, a verifier and a training loop; each claim is measured on held-out data, and rounds that did not beat the baseline are written up.</p>
-            <div class="tags">PyTorch · LoRA · vLLM · retrieval · evaluation</div>
-          </div>
-        </li>
-        <li>
-          <div class="receipt">2nd in Product<br>Murf AI × IIT Bombay</div>
-          <div>
-            <h3><a href="https://github.com/b25bb1004-wq/murf-ai-iitb-hackathon">VOX</a></h3>
-            <p>A real-time voice research agent: live transcription, streaming speech, retrieval over PDFs, and arXiv, web and patent search as tools. Built with a teammate for the Techfest hackathon.</p>
-            <div class="tags">FastAPI · React · ChromaDB · Deepgram · Murf Falcon</div>
-          </div>
-        </li>
-        <li>
-          <div class="receipt">5 models<br>one 12 GB GPU</div>
-          <div>
-            <h3>Local LLM serving and evaluation</h3>
-            <p>Benchmarked five open models on MMLU and HumanEval and served them behind one llama.cpp router that loads each on demand. A 35B mixture-of-experts (MoE) model scored 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems.</p>
-            <div class="tags">llama.cpp · vLLM · GGUF · RTX 5070</div>
-          </div>
-        </li>
-        <li>
-          <div class="receipt">micrograd ✓<br>makemore in progress</div>
-          <div>
-            <h3><a href="https://github.com/b25bb1004-wq/llm-from-scratch">llm-from-scratch</a></h3>
-            <p>A GPT built from the ground up, one Zero to Hero lecture per folder, each run top to bottom. The autograd engine has tests that caught real bugs.</p>
-            <div class="tags">Python · PyTorch · pytest</div>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <section aria-labelledby="how">
-      <h2 id="how">How I work</h2>
-      <ul class="principles">
-        <li><strong>Measure before building</strong><span>Break the errors down by cause first. Compare against a trivial baseline. Fix the biggest cause.</span></li>
-        <li><strong>One test pass</strong><span>Choose on a dev set, touch the held-out test once, and report every configuration that was run.</span></li>
-        <li><strong>Say what failed</strong><span>Rounds that did not beat the baseline go in the write-up with the reason.</span></li>
-      </ul>
-    </section>
-
-    <section aria-labelledby="also">
-      <h2 id="also">Also</h2>
-      <p class="also">Flight control for a GPS-denied autonomous drone (ISRO Robotics Challenge, Stage 1 cleared; vision-only position hold in 11 of 12 flight tests). Full-stack platform for IIT Jodhpur's Anand Rathi Tinkering Lab (Next.js, Supabase, role-based row-level security).</p>
-    </section>
-  </main>
-
-  <footer>Jodhpur, India · LLM training, evaluation and inference</footer>
-</div>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314213D'/%3E%3Cpath d='M8 24 16 8l8 16M11.5 18h9' stroke='%23F2A100' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script>
+/* Runs first. `js` and `anim` gate every "hidden before build" rule in the CSS.
+   Folio is a queue stub so viz scripts may register before or after core.js runs.
+   `ready` is also forced after 3.5 s so the hero can never stay hidden. */
 (function () {
-  var root = document.documentElement, btn = document.getElementById('theme');
-  try { var saved = localStorage.getItem('theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
-  btn.addEventListener('click', function () {
-    var dark = root.getAttribute('data-theme') === 'dark' ||
-      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    var next = dark ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-    btn.setAttribute('aria-pressed', String(next === 'dark'));
-  });
-  btn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'dark' ||
-    (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)));
+  var d = document.documentElement;
+  d.classList.add('js');
+  if (!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) d.classList.add('anim');
+  setTimeout(function () { d.classList.add('ready'); }, 3500);
+  window.Folio = window.Folio || { _q: [], registerViz: function (n, b) { this._q.push([n, b]); } };
 })();
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/viz.css">
+<link rel="stylesheet" href="css/viz-humble.css">
+<link rel="stylesheet" href="css/viz-pitwall.css">
+<link rel="stylesheet" href="css/viz-faith.css">
+<link rel="stylesheet" href="css/viz-vox.css">
+<link rel="stylesheet" href="css/viz-serving.css">
+<link rel="stylesheet" href="css/viz-scratch.css">
+<script defer src="js/vendor/gsap.min.js"></script>
+<script defer src="js/vendor/ScrollTrigger.min.js"></script>
+<script defer src="js/core.js"></script>
+<script defer src="js/viz-humble.js"></script>
+<script defer src="js/viz-pitwall.js"></script>
+<script defer src="js/viz-faith.js"></script>
+<script defer src="js/viz-vox.js"></script>
+<script defer src="js/viz-serving.js"></script>
+<script defer src="js/viz-scratch.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="bar">
+  <a class="site" href="#hero">Arnav Yadav</a>
+  <ul class="agents" aria-hidden="true">
+    <li class="chip" data-agent="draft"><i class="dot"></i><span>Draft</span></li>
+    <li class="chip" data-agent="plot"><i class="dot"></i><span>Plot</span></li>
+    <li class="chip" data-agent="data"><i class="dot"></i><span>Data</span></li>
+    <li class="chip" data-agent="check"><i class="dot"></i><span>Check</span></li>
+    <li class="chip" data-agent="layout"><i class="dot"></i><span>Layout</span></li>
+  </ul>
+  <div class="progress" aria-hidden="true"><i></i></div>
+</header>
+
+<main id="main">
+
+<section id="hero" aria-labelledby="hero-h">
+  <div class="hero-in">
+    <h1 id="hero-h">Arnav Yadav</h1>
+    <p class="intro">BTech student at IIT Jodhpur working on LLM training, evaluation and serving. I build the checks that tell you whether a model is right, and test results on data the model has not seen.</p>
+    <ul class="links">
+      <li class="primary"><a href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a></li>
+      <li><a href="https://github.com/b25bb1004-wq">GitHub</a></li>
+      <li><a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a></li>
+    </ul>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="humble" class="work" aria-labelledby="humble-h">
+  <div class="work-in">
+    <div class="work-text">
+      <h2 id="humble-h" class="title"><a href="https://github.com/b25bb1004-wq/firstrun" data-type>HUMBLE</a></h2>
+      <p class="claim"><span>26 of 31 repos verified</span><span>14 end-to-end</span></p>
+      <div class="work-body">
+        <p>Follows a repository's setup docs on a clean machine, repairs every step that breaks with evidence, replays the fixed guide from zero, and opens a PR with a README that provably works. Verified 26 of 31 real repos (14 end-to-end, 12 waiting only on the user's input) and fixed 36 breaks. Built on IBM Bob for the IBM Bob 2.0 Hackathon.</p>
+        <p class="stack">Built with agents, Docker and TypeScript.</p>
+        <p class="work-links"><a href="https://firstrun-sigma.vercel.app">live demo</a></p>
+      </div>
+    </div>
+    <div class="viz-slot"><figure class="viz" data-viz="humble" role="img" aria-label="31 repository tiles: 14 verified end-to-end, 12 waiting only on the user's input, 5 not verified. 26 of 31 verified, 36 breaks fixed."></figure></div>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="pitwall" class="work" aria-labelledby="pitwall-h">
+  <div class="work-in">
+    <div class="work-text">
+      <h2 id="pitwall-h" class="title"><a href="https://github.com/b25bb1004-wq/F1-Pitstop_Strategy" data-type>Pitwall</a></h2>
+      <p class="claim"><span>0.62 s vs 1.11 s</span><span>held-out 2025 season</span></p>
+      <div class="work-body">
+        <p>Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine on every F1 race from 2021 to 2025. Fitted on 2021-2023, tuned on 2024, tested once on 2025. Mean absolute error 0.62 s over 109,883 in-race predictions, against 1.11 s for repeating the last lap.</p>
+        <p class="stack">Built with Python, dynamic programming and WebGL.</p>
+        <p class="work-links"><a href="https://b25bb1004-wq.github.io/F1-Pitstop_Strategy/">live 3D app</a></p>
+      </div>
+    </div>
+    <div class="viz-slot"><figure class="viz" data-viz="pitwall" role="img" aria-label="A circuit outline with a car dot and two horizontal error bars: the model's mean absolute error is 0.62 s and repeating the last lap gives 1.11 s, over 109,883 in-race predictions with the 2025 season held out."></figure></div>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="faith" class="work" aria-labelledby="faith-h">
+  <div class="work-in">
+    <div class="work-text">
+      <h2 id="faith-h" class="title" data-type>Faith</h2>
+      <p class="claim"><span>Private research</span><span>IIT Jodhpur</span></p>
+      <div class="work-body">
+        <p>A small open model trained to answer research questions with citations a checker can verify: retrieval over a paper corpus, a natural language inference (NLI) model, and a word-for-word quote test. Built as a benchmark, a verifier and a training loop; each claim is measured on held-out data, and rounds that did not beat the baseline are written up.</p>
+        <p class="stack">Built with PyTorch, LoRA, vLLM, retrieval and evaluation.</p>
+      </div>
+    </div>
+    <div class="viz-slot"><figure class="viz" data-viz="faith" role="img" aria-label="Schematic: an answer with a citation marker linked to one quoted sentence in a paper excerpt, and a check that the quote matches the paper word for word."></figure></div>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="vox" class="work" aria-labelledby="vox-h">
+  <div class="work-in">
+    <div class="work-text">
+      <h2 id="vox-h" class="title"><a href="https://github.com/b25bb1004-wq/murf-ai-iitb-hackathon" data-type>VOX</a></h2>
+      <p class="claim"><span>2nd in Product</span><span>Murf AI × IIT Bombay</span></p>
+      <div class="work-body">
+        <p>A real-time voice research agent: live transcription, streaming speech, retrieval over PDFs, and arXiv, web and patent search as tools. Built with a teammate for the Techfest hackathon.</p>
+        <p class="stack">Built with FastAPI, React, ChromaDB, Deepgram and Murf Falcon.</p>
+      </div>
+    </div>
+    <div class="viz-slot"><figure class="viz" data-viz="vox" role="img" aria-label="A voice waveform turning into transcript words, four tool chips (arXiv, web, patents, PDFs), and the label 2nd in Product."></figure></div>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="serving" class="work" aria-labelledby="serving-h">
+  <div class="work-in">
+    <div class="work-text">
+      <h2 id="serving-h" class="title" data-type>Local LLM serving and evaluation</h2>
+      <p class="claim"><span>5 models</span><span>one 12 GB GPU</span></p>
+      <div class="work-body">
+        <p>Benchmarked five open models on MMLU and HumanEval and served them behind one llama.cpp router that loads each on demand. A 35B mixture-of-experts (MoE) model scored 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems.</p>
+        <p class="stack">Built with llama.cpp, vLLM, GGUF and an RTX 5070.</p>
+      </div>
+    </div>
+    <div class="viz-slot"><figure class="viz" data-viz="serving" role="img" aria-label="One 12 GB GPU slot with five models queued beside it and one loaded, and two bars for the 35B mixture-of-experts model: 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems."></figure></div>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="scratch" class="work" aria-labelledby="scratch-h">
+  <div class="work-in">
+    <div class="work-text">
+      <h2 id="scratch-h" class="title"><a href="https://github.com/b25bb1004-wq/llm-from-scratch" data-type>llm-from-scratch</a></h2>
+      <p class="claim"><span>micrograd ✓</span><span>makemore in progress</span></p>
+      <div class="work-body">
+        <p>A GPT built from the ground up, one Zero to Hero lecture per folder, each run top to bottom. The autograd engine has tests that caught real bugs.</p>
+        <p class="stack">Built with Python, PyTorch and pytest.</p>
+      </div>
+    </div>
+    <div class="viz-slot"><figure class="viz" data-viz="scratch" role="img" aria-label="Schematic: a small computation graph in the style of micrograd with value nodes, an output and gradients on the edges. micrograd done, makemore in progress."></figure></div>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+</section>
+
+<section id="method" aria-labelledby="how">
+  <div class="method-in">
+    <h2 id="how">How I work</h2>
+    <ul class="principles">
+      <li><strong>Measure before building</strong><span>Break the errors down by cause first. Compare against a trivial baseline. Fix the biggest cause.</span></li>
+      <li><strong>One test pass</strong><span>Choose on a dev set, touch the held-out test once, and report every configuration that was run.</span></li>
+      <li><strong>Say what failed</strong><span>Rounds that did not beat the baseline go in the write-up with the reason.</span></li>
+    </ul>
+    <h2 id="also">Also</h2>
+    <p class="also">Flight control for a GPS-denied autonomous drone (ISRO Robotics Challenge, Stage 1 cleared; vision-only position hold in 11 of 12 flight tests). Full-stack platform for IIT Jodhpur's Anand Rathi Tinkering Lab (Next.js, Supabase, role-based row-level security).</p>
+  </div>
+</section>
+
+</main>
+
+<footer id="contact">
+  <div class="foot-in">
+    <ul class="links">
+      <li class="primary"><a href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a></li>
+      <li><a href="https://github.com/b25bb1004-wq">GitHub</a></li>
+      <li><a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a></li>
+    </ul>
+    <p>Jodhpur, India. LLM training, evaluation and inference.</p>
+  </div>
+</footer>
+
 </body>
 </html>

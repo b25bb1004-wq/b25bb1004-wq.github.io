@@ -1,0 +1,16 @@
+/* viz-humble.css: repo tiles. Data amber: fill #F2A100, edges #C77800 (3:1 on the panel). */
+.hm-grid { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); aspect-ratio: 8 / 4; }
+.hm-cell { padding: clamp(2px, .5vw, 4px); min-width: 0; }
+.hm-t { position: relative; display: block; width: 100%; height: 100%; border-radius: 6px; border: 1.5px dashed var(--line); }
+.hm-fin { position: absolute; inset: -1.5px; border-radius: 6px; border: 1.5px solid var(--data-ink); will-change: transform, opacity; }
+.hm-s .hm-fin, .hm-sw.hm-s { background: var(--data); }
+.hm-h .hm-fin, .hm-sw.hm-h { background: repeating-linear-gradient(135deg, var(--data) 0 3px, var(--panel) 3px 7px); }
+.hm-o .hm-fin, .hm-sw.hm-o { background: var(--panel); border-width: 2px; }
+.hm-scan { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.hm-scan path { fill: none; stroke: var(--data-ink); stroke-width: .035; stroke-linecap: butt; stroke-linejoin: round; opacity: .6; }
+.hm-sw { display: inline-block; flex: none; width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid var(--data-ink); }
+.hm-legend li { font-size: 15px; }
+.hm-foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.hm-breaks, .hm-verdict { font: 600 clamp(1.05rem, 1.2vw + .6rem, 1.4rem)/1.2 var(--display); }
+.hm-verdict .tick { font-size: 1em; }
+.hm-verdict { padding-right: 1.5em; }
