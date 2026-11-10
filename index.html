@@ -10,188 +10,230 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://b25bb1004-wq.github.io/">
 <link rel="canonical" href="https://b25bb1004-wq.github.io/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314213D'/%3E%3Cpath d='M8 24 16 8l8 16M11.5 18h9' stroke='%23F2A100' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script>
-/* Runs first. `js` and `anim` gate every "hidden before build" rule in the CSS.
-   Folio is a queue stub so viz scripts may register before or after core.js runs.
-   `ready` is also forced after 3.5 s so the hero can never stay hidden. */
 (function () {
   var d = document.documentElement;
   d.classList.add('js');
-  if (!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) d.classList.add('anim');
-  setTimeout(function () { d.classList.add('ready'); }, 3500);
-  window.Folio = window.Folio || { _q: [], registerViz: function (n, b) { this._q.push([n, b]); } };
+  if (!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) d.classList.add('motion');
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/viz.css">
-<link rel="stylesheet" href="css/viz-humble.css">
-<link rel="stylesheet" href="css/viz-pitwall.css">
-<link rel="stylesheet" href="css/viz-faith.css">
-<link rel="stylesheet" href="css/viz-vox.css">
-<link rel="stylesheet" href="css/viz-serving.css">
-<link rel="stylesheet" href="css/viz-scratch.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Hanken+Grotesk:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="css/sheet.css">
 <script defer src="js/vendor/gsap.min.js"></script>
-<script defer src="js/vendor/ScrollTrigger.min.js"></script>
-<script defer src="js/core.js"></script>
-<script defer src="js/viz-humble.js"></script>
-<script defer src="js/viz-pitwall.js"></script>
-<script defer src="js/viz-faith.js"></script>
-<script defer src="js/viz-vox.js"></script>
-<script defer src="js/viz-serving.js"></script>
-<script defer src="js/viz-scratch.js"></script>
+<script defer src="js/swarm.js"></script>
+<script defer src="js/charts.js"></script>
+<script defer src="js/build.js"></script>
+<script defer src="js/fx.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <header id="bar">
-  <a class="site" href="#hero">Arnav Yadav</a>
-  <ul class="agents" aria-hidden="true">
-    <li class="chip" data-agent="draft"><i class="dot"></i><span>Draft</span></li>
-    <li class="chip" data-agent="plot"><i class="dot"></i><span>Plot</span></li>
-    <li class="chip" data-agent="data"><i class="dot"></i><span>Data</span></li>
-    <li class="chip" data-agent="check"><i class="dot"></i><span>Check</span></li>
-    <li class="chip" data-agent="layout"><i class="dot"></i><span>Layout</span></li>
-  </ul>
-  <div class="progress" aria-hidden="true"><i></i></div>
+  <a class="brand" href="#hero">arnav.sheet</a>
+  <div id="faces" aria-hidden="true"></div>
+  <span id="clock">Filled in 0.0s</span>
+  <button id="rebuild" type="button">Rebuild</button>
 </header>
+<canvas id="backdrop" aria-hidden="true"></canvas>
 
 <main id="main">
 
-<section id="hero" aria-labelledby="hero-h">
-  <div class="hero-in">
-    <h1 id="hero-h">Arnav Yadav</h1>
-    <p class="intro">BTech student at IIT Jodhpur working on LLM training, evaluation and serving. I build the checks that tell you whether a model is right, and test results on data the model has not seen.</p>
-    <ul class="links">
-      <li class="primary"><a href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a></li>
-      <li><a href="https://github.com/b25bb1004-wq">GitHub</a></li>
-      <li><a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a></li>
-    </ul>
-  </div>
-  <div class="cast" aria-hidden="true"></div>
+<section id="hero" data-block="hero" aria-labelledby="name">
+  <h1 id="name">Arnav Yadav</h1>
+  <p class="lede">BTech student at IIT Jodhpur working on LLM training, evaluation and serving.</p>
+  <p class="intro">I build the checks that tell you whether a model is right, and test results on data the model has not seen.</p>
+  <nav class="links" aria-label="Contact links">
+    <a class="primary" href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a>
+    <a href="https://github.com/b25bb1004-wq">GitHub</a>
+    <a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a>
+  </nav>
 </section>
 
-<section id="humble" class="work" aria-labelledby="humble-h">
-  <div class="work-in">
-    <div class="work-text">
-      <h2 id="humble-h" class="title"><a href="https://github.com/b25bb1004-wq/firstrun" data-type>HUMBLE</a></h2>
-      <p class="claim"><span>26 of 31 repos verified</span><span>14 end-to-end</span></p>
-      <div class="work-body">
-        <p>Follows a repository's setup docs on a clean machine, repairs every step that breaks with evidence, replays the fixed guide from zero, and opens a PR with a README that provably works. Verified 26 of 31 real repos (14 end-to-end, 12 waiting only on the user's input) and fixed 36 breaks. Built on IBM Bob for the IBM Bob 2.0 Hackathon.</p>
-        <p class="stack">Built with agents, Docker and TypeScript.</p>
-        <p class="work-links"><a href="https://firstrun-sigma.vercel.app">live demo</a></p>
+<section class="book" id="projects" data-block="sheet" aria-labelledby="projects-h">
+  <header class="book-head">
+    <h2 id="projects-h">Projects</h2>
+    <p class="claim"><span>6 projects</span><span>9 links</span></p>
+  </header>
+  <div class="book-body">
+    <div class="win">
+      <div class="win-bar"><span class="win-name">projects.sheet</span><span class="win-status"></span></div>
+      <div class="fx"><span class="fx-cell">A1</span><span class="fx-val"></span></div>
+      <div class="grid-wrap">
+        <table class="grid">
+          <caption class="sr-only">Projects: six projects with what each is, its headline result, status and links.</caption>
+          <thead>
+            <tr><th scope="col"></th><th class="col" scope="col">A</th><th class="col" scope="col">B</th><th class="col" scope="col">C</th><th class="col" scope="col">D</th><th class="col" scope="col">E</th></tr>
+          </thead>
+          <tbody>
+            <tr class="head"><th class="row" scope="row">1</th><td data-cell="A1" data-t="head">Project</td><td data-cell="B1" data-t="head">What it is</td><td data-cell="C1" data-t="head">Result</td><td data-cell="D1" data-t="head">Status</td><td data-cell="E1" data-t="head">Open</td></tr>
+            <tr><th class="row" scope="row">2</th><td data-cell="A2" data-t="text">HUMBLE</td><td data-cell="B2" data-t="text">Follows a repository's setup docs on a clean machine</td><td data-cell="C2" data-t="text">26 of 31 repos verified</td><td data-cell="D2" data-t="tag">14 end-to-end</td><td data-cell="E2" data-t="link"><a href="https://github.com/b25bb1004-wq/firstrun">GitHub</a>, <a href="https://firstrun-sigma.vercel.app">live demo</a></td></tr>
+            <tr><th class="row" scope="row">3</th><td data-cell="A3" data-t="text">Pitwall</td><td data-cell="B3" data-t="text">Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine</td><td data-cell="C3" data-t="text">0.62 s vs 1.11 s</td><td data-cell="D3" data-t="tag">held-out 2025 season</td><td data-cell="E3" data-t="link"><a href="https://github.com/b25bb1004-wq/F1-Pitstop_Strategy">GitHub</a>, <a href="https://b25bb1004-wq.github.io/F1-Pitstop_Strategy/">live 3D app</a></td></tr>
+            <tr><th class="row" scope="row">4</th><td data-cell="A4" data-t="text">Faith</td><td data-cell="B4" data-t="text">A small open model trained to answer research questions with citations a checker can verify: retrieval over a paper corpus, a natural language inference (NLI) model, and a word-for-word quote test. Built as a benchmark, a verifier and a training loop; each claim is measured on held-out data, and rounds that did not beat the baseline are written up. <span class="stack">Built with PyTorch, LoRA, vLLM, retrieval and evaluation.</span></td><td data-cell="C4" data-t="text">Private research</td><td data-cell="D4" data-t="tag">IIT Jodhpur</td><td data-cell="E4" data-t="text">none</td></tr>
+            <tr><th class="row" scope="row">5</th><td data-cell="A5" data-t="text">VOX</td><td data-cell="B5" data-t="text">A real-time voice research agent: live transcription, streaming speech, retrieval over PDFs, and arXiv, web and patent search as tools. Built with a teammate for the Techfest hackathon. <span class="stack">Built with FastAPI, React, ChromaDB, Deepgram and Murf Falcon.</span></td><td data-cell="C5" data-t="text">2nd in Product</td><td data-cell="D5" data-t="tag">Murf AI × IIT Bombay</td><td data-cell="E5" data-t="link"><a href="https://github.com/b25bb1004-wq/murf-ai-iitb-hackathon">GitHub</a></td></tr>
+            <tr><th class="row" scope="row">6</th><td data-cell="A6" data-t="text">Local LLM serving and evaluation</td><td data-cell="B6" data-t="text">Benchmarked five open models on MMLU and HumanEval</td><td data-cell="C6" data-t="text">5 models</td><td data-cell="D6" data-t="tag">one 12 GB GPU</td><td data-cell="E6" data-t="text">none</td></tr>
+            <tr><th class="row" scope="row">7</th><td data-cell="A7" data-t="text">llm-from-scratch</td><td data-cell="B7" data-t="text">A GPT built from the ground up, one Zero to Hero lecture per folder, each run top to bottom. The autograd engine has tests that caught real bugs. <span class="stack">Built with Python, PyTorch and pytest.</span></td><td data-cell="C7" data-t="text">micrograd ✓</td><td data-cell="D7" data-t="tag">makemore in progress</td><td data-cell="E7" data-t="link"><a href="https://github.com/b25bb1004-wq/llm-from-scratch">GitHub</a></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="viz-slot"><figure class="viz" data-viz="humble" role="img" aria-label="31 repository tiles: 14 verified end-to-end, 12 waiting only on the user's input, 5 not verified. 26 of 31 verified, 36 breaks fixed."></figure></div>
+    <aside class="side">
+      <p class="count">6 projects, 9 links</p>
+      <div class="log" aria-hidden="true"><ol></ol></div>
+    </aside>
   </div>
-  <div class="cast" aria-hidden="true"></div>
 </section>
 
-<section id="pitwall" class="work" aria-labelledby="pitwall-h">
-  <div class="work-in">
-    <div class="work-text">
-      <h2 id="pitwall-h" class="title"><a href="https://github.com/b25bb1004-wq/F1-Pitstop_Strategy" data-type>Pitwall</a></h2>
-      <p class="claim"><span>0.62 s vs 1.11 s</span><span>held-out 2025 season</span></p>
-      <div class="work-body">
-        <p>Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine on every F1 race from 2021 to 2025. Fitted on 2021-2023, tuned on 2024, tested once on 2025. Mean absolute error 0.62 s over 109,883 in-race predictions, against 1.11 s for repeating the last lap.</p>
-        <p class="stack">Built with Python, dynamic programming and WebGL.</p>
-        <p class="work-links"><a href="https://b25bb1004-wq.github.io/F1-Pitstop_Strategy/">live 3D app</a></p>
+<section class="book" id="humble" data-block="sheet" aria-labelledby="humble-h">
+  <header class="book-head">
+    <h2 id="humble-h"><a href="https://github.com/b25bb1004-wq/firstrun">HUMBLE</a></h2>
+    <p class="claim"><span>26 of 31 repos verified</span><span>14 end-to-end</span></p>
+    <p class="book-note">Follows a repository's setup docs on a clean machine, repairs every step that breaks with evidence, replays the fixed guide from zero, and opens a PR with a README that provably works. Verified 26 of 31 real repos (14 end-to-end, 12 waiting only on the user's input) and fixed 36 breaks. Built on IBM Bob for the IBM Bob 2.0 Hackathon.</p>
+    <p class="book-note">Built with agents, Docker and TypeScript. <a href="https://firstrun-sigma.vercel.app">live demo</a></p>
+  </header>
+  <div class="book-body">
+    <div class="win">
+      <div class="win-bar"><span class="win-name">humble.sheet</span><span class="win-status"></span></div>
+      <div class="fx"><span class="fx-cell">A1</span><span class="fx-val"></span></div>
+      <div class="grid-wrap">
+        <table class="grid">
+          <caption class="sr-only">HUMBLE repository status: 14 verified end-to-end, 12 waiting on the user's input, 5 not verified, with the verified total, the total of 31 and the share verified.</caption>
+          <thead>
+            <tr><th scope="col"></th><th class="col" scope="col">A</th><th class="col" scope="col">B</th></tr>
+          </thead>
+          <tbody>
+            <tr class="head"><th class="row" scope="row">1</th><td data-cell="A1" data-t="head">Status</td><td data-cell="B1" data-t="head">Repos</td></tr>
+            <tr><th class="row" scope="row">2</th><td data-cell="A2" data-t="text">verified end-to-end</td><td data-cell="B2" data-t="num" data-v="14">14</td></tr>
+            <tr><th class="row" scope="row">3</th><td data-cell="A3" data-t="text">waiting only on the user's input</td><td data-cell="B3" data-t="num" data-v="12">12</td></tr>
+            <tr><th class="row" scope="row">4</th><td data-cell="A4" data-t="text">not verified</td><td data-cell="B4" data-t="num" data-v="5">5</td></tr>
+            <tr><th class="row" scope="row">5</th><td data-cell="A5" data-t="text">verified</td><td data-cell="B5" data-t="formula" data-f="=B2+B3" data-v="26" data-check="26 = 14 + 12">26</td></tr>
+            <tr class="total"><th class="row" scope="row">6</th><td data-cell="A6" data-t="text">total</td><td data-cell="B6" data-t="formula" data-f="=SUM(B2:B4)" data-v="31">31</td></tr>
+            <tr><th class="row" scope="row">7</th><td data-cell="A7" data-t="text">share verified</td><td data-cell="B7" data-t="formula" data-f="=B5/B6" data-v="0.839">83.9%</td></tr>
+            <tr><th class="row" scope="row">8</th><td data-cell="A8" data-t="text">breaks fixed</td><td data-cell="B8" data-t="num" data-v="36">36</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="viz-slot"><figure class="viz" data-viz="pitwall" role="img" aria-label="A circuit outline with a car dot and two horizontal error bars: the model's mean absolute error is 0.62 s and repeating the last lap gives 1.11 s, over 109,883 in-race predictions with the 2025 season held out."></figure></div>
+    <aside class="side">
+      <figure class="chart" data-chart="tiles" data-range="B2:B4" role="img" aria-label="31 repository tiles: 14 verified end-to-end (solid), 12 waiting only on the user's input (hatched), 5 not verified (outline). 26 of 31 verified, 36 breaks fixed.">
+        <div class="tiles">
+          <span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile solid"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile hatch"></span><span class="tile outline"></span><span class="tile outline"></span><span class="tile outline"></span><span class="tile outline"></span><span class="tile outline"></span>
+        </div>
+        <figcaption>31 repos: 14 verified end-to-end, 12 waiting only on the user's input, 5 not verified.</figcaption>
+      </figure>
+      <div class="log" aria-hidden="true"><ol></ol></div>
+    </aside>
   </div>
-  <div class="cast" aria-hidden="true"></div>
 </section>
 
-<section id="faith" class="work" aria-labelledby="faith-h">
-  <div class="work-in">
-    <div class="work-text">
-      <h2 id="faith-h" class="title" data-type>Faith</h2>
-      <p class="claim"><span>Private research</span><span>IIT Jodhpur</span></p>
-      <div class="work-body">
-        <p>A small open model trained to answer research questions with citations a checker can verify: retrieval over a paper corpus, a natural language inference (NLI) model, and a word-for-word quote test. Built as a benchmark, a verifier and a training loop; each claim is measured on held-out data, and rounds that did not beat the baseline are written up.</p>
-        <p class="stack">Built with PyTorch, LoRA, vLLM, retrieval and evaluation.</p>
+<section class="book" id="pitwall" data-block="sheet" aria-labelledby="pitwall-h">
+  <header class="book-head">
+    <h2 id="pitwall-h"><a href="https://github.com/b25bb1004-wq/F1-Pitstop_Strategy">Pitwall</a></h2>
+    <p class="claim"><span>0.62 s vs 1.11 s</span><span>held-out 2025 season</span></p>
+    <p class="book-note">Lap-time prediction, tyre-degradation modelling and a pit-stop decision engine on every F1 race from 2021 to 2025. Fitted on 2021-2023, tuned on 2024, tested once on 2025. Mean absolute error 0.62 s over 109,883 in-race predictions, against 1.11 s for repeating the last lap.</p>
+    <p class="book-note">Built with Python, dynamic programming and WebGL. <a href="https://b25bb1004-wq.github.io/F1-Pitstop_Strategy/">live 3D app</a></p>
+  </header>
+  <div class="book-body">
+    <div class="win">
+      <div class="win-bar"><span class="win-name">pitwall.sheet</span><span class="win-status"></span></div>
+      <div class="fx"><span class="fx-cell">A1</span><span class="fx-val"></span></div>
+      <div class="grid-wrap">
+        <table class="grid">
+          <caption class="sr-only">Pitwall model mean absolute error in seconds against repeating the last lap, with the prediction count and the data split.</caption>
+          <thead>
+            <tr><th scope="col"></th><th class="col" scope="col">A</th><th class="col" scope="col">B</th><th class="col" scope="col">C</th></tr>
+          </thead>
+          <tbody>
+            <tr class="head"><th class="row" scope="row">1</th><td data-cell="A1" data-t="head">Method</td><td data-cell="B1" data-t="head">MAE (s)</td><td data-cell="C1" data-t="head">vs repeat last lap</td></tr>
+            <tr><th class="row" scope="row">2</th><td data-cell="A2" data-t="text">Pitwall model</td><td data-cell="B2" data-t="num" data-v="0.62" data-check="0.62 < 1.11">0.62</td><td data-cell="C2" data-t="formula" data-f="=B2/B3" data-v="0.56">0.56x</td></tr>
+            <tr><th class="row" scope="row">3</th><td data-cell="A3" data-t="text">repeat the last lap</td><td data-cell="B3" data-t="num" data-v="1.11">1.11</td><td data-cell="C3" data-t="num" data-v="1">1.00x</td></tr>
+            <tr><th class="row" scope="row">4</th><td data-cell="A4" data-t="text">in-race predictions</td><td data-cell="B4" data-t="num" data-v="109883">109,883</td><td data-cell="C4" data-t="text"></td></tr>
+            <tr><th class="row" scope="row">5</th><td data-cell="A5" data-t="text">fitted</td><td data-cell="B5" data-t="text">2021-2023</td><td data-cell="C5" data-t="text"></td></tr>
+            <tr><th class="row" scope="row">6</th><td data-cell="A6" data-t="text">tuned</td><td data-cell="B6" data-t="text">2024</td><td data-cell="C6" data-t="text"></td></tr>
+            <tr><th class="row" scope="row">7</th><td data-cell="A7" data-t="text">tested once</td><td data-cell="B7" data-t="text">2025</td><td data-cell="C7" data-t="text"></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="viz-slot"><figure class="viz" data-viz="faith" role="img" aria-label="Schematic: an answer with a citation marker linked to one quoted sentence in a paper excerpt, and a check that the quote matches the paper word for word."></figure></div>
+    <aside class="side">
+      <figure class="chart" data-chart="bar" data-labels="A2:A3" data-range="B2:B3" data-win="B2" role="img" aria-label="Bar chart of mean absolute error: Pitwall model 0.62 s, repeating the last lap 1.11 s.">
+        <div class="bar-row"><span class="bar-label">Pitwall model</span><span class="bar-track"><span class="bar" style="--w:55.9%"></span></span><span class="bar-val">0.62</span></div>
+        <div class="bar-row"><span class="bar-label">repeat the last lap</span><span class="bar-track"><span class="bar" style="--w:100%"></span></span><span class="bar-val">1.11</span></div>
+        <figcaption>0.62 s against 1.11 s</figcaption>
+      </figure>
+      <div class="log" aria-hidden="true"><ol></ol></div>
+    </aside>
   </div>
-  <div class="cast" aria-hidden="true"></div>
 </section>
 
-<section id="vox" class="work" aria-labelledby="vox-h">
-  <div class="work-in">
-    <div class="work-text">
-      <h2 id="vox-h" class="title"><a href="https://github.com/b25bb1004-wq/murf-ai-iitb-hackathon" data-type>VOX</a></h2>
-      <p class="claim"><span>2nd in Product</span><span>Murf AI × IIT Bombay</span></p>
-      <div class="work-body">
-        <p>A real-time voice research agent: live transcription, streaming speech, retrieval over PDFs, and arXiv, web and patent search as tools. Built with a teammate for the Techfest hackathon.</p>
-        <p class="stack">Built with FastAPI, React, ChromaDB, Deepgram and Murf Falcon.</p>
+<section class="book" id="serving" data-block="sheet" aria-labelledby="serving-h">
+  <header class="book-head">
+    <h2 id="serving-h">Local LLM serving and evaluation</h2>
+    <p class="claim"><span>5 models, one 12 GB GPU</span><span>35B MoE model: 83.7% and 75.6%</span></p>
+    <p class="book-note">Benchmarked five open models on MMLU and HumanEval and served them behind one llama.cpp router that loads each on demand. A 35B mixture-of-experts (MoE) model scored 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems.</p>
+    <p class="book-note">Built with llama.cpp, vLLM, GGUF and an RTX 5070.</p>
+  </header>
+  <div class="book-body">
+    <div class="win">
+      <div class="win-bar"><span class="win-name">serving.sheet</span><span class="win-status"></span></div>
+      <div class="fx"><span class="fx-cell">A1</span><span class="fx-val"></span></div>
+      <div class="grid-wrap">
+        <table class="grid">
+          <caption class="sr-only">Benchmark scores for the 35B mixture-of-experts model: MMLU subset and HumanEval, with the question count, and the number of models served on one 12 GB GPU.</caption>
+          <thead>
+            <tr><th scope="col"></th><th class="col" scope="col">A</th><th class="col" scope="col">B</th><th class="col" scope="col">C</th></tr>
+          </thead>
+          <tbody>
+            <tr class="head"><th class="row" scope="row">1</th><td data-cell="A1" data-t="head">Benchmark</td><td data-cell="B1" data-t="head">Questions</td><td data-cell="C1" data-t="head">Score</td></tr>
+            <tr><th class="row" scope="row">2</th><td data-cell="A2" data-t="text">MMLU subset</td><td data-cell="B2" data-t="num" data-v="300">300</td><td data-cell="C2" data-t="num" data-v="83.7">83.7%</td></tr>
+            <tr><th class="row" scope="row">3</th><td data-cell="A3" data-t="text">HumanEval</td><td data-cell="B3" data-t="num" data-v="164">164</td><td data-cell="C3" data-t="num" data-v="75.6">75.6%</td></tr>
+            <tr><th class="row" scope="row">4</th><td data-cell="A4" data-t="text">models on one 12 GB GPU</td><td data-cell="B4" data-t="text"></td><td data-cell="C4" data-t="num" data-v="5">5</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="viz-slot"><figure class="viz" data-viz="vox" role="img" aria-label="A voice waveform turning into transcript words, four tool chips (arXiv, web, patents, PDFs), and the label 2nd in Product."></figure></div>
+    <aside class="side">
+      <figure class="chart" data-chart="bar" data-labels="A2:A3" data-range="C2:C3" data-win="C2" role="img" aria-label="Bar chart on a 0 to 100 scale for the 35B mixture-of-experts model: MMLU subset 83.7%, HumanEval 75.6%.">
+        <div class="bar-row"><span class="bar-label">MMLU subset</span><span class="bar-track"><span class="bar" style="--w:83.7%"></span></span><span class="bar-val">83.7%</span></div>
+        <div class="bar-row"><span class="bar-label">HumanEval</span><span class="bar-track"><span class="bar" style="--w:75.6%"></span></span><span class="bar-val">75.6%</span></div>
+        <figcaption>35B MoE model, scores in percent on a 0 to 100 scale</figcaption>
+      </figure>
+      <div class="log" aria-hidden="true"><ol></ol></div>
+    </aside>
   </div>
-  <div class="cast" aria-hidden="true"></div>
 </section>
 
-<section id="serving" class="work" aria-labelledby="serving-h">
-  <div class="work-in">
-    <div class="work-text">
-      <h2 id="serving-h" class="title" data-type>Local LLM serving and evaluation</h2>
-      <p class="claim"><span>5 models</span><span>one 12 GB GPU</span></p>
-      <div class="work-body">
-        <p>Benchmarked five open models on MMLU and HumanEval and served them behind one llama.cpp router that loads each on demand. A 35B mixture-of-experts (MoE) model scored 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems.</p>
-        <p class="stack">Built with llama.cpp, vLLM, GGUF and an RTX 5070.</p>
-      </div>
-    </div>
-    <div class="viz-slot"><figure class="viz" data-viz="serving" role="img" aria-label="One 12 GB GPU slot with five models queued beside it and one loaded, and two bars for the 35B mixture-of-experts model: 83.7% on a 300-question MMLU subset and 75.6% on all 164 HumanEval problems."></figure></div>
+<section id="method" data-block="notes" aria-labelledby="how">
+  <h2 id="how">How I work</h2>
+  <div class="note">
+    <strong>Measure before building</strong>
+    <p>Break the errors down by cause first. Compare against a trivial baseline. Fix the biggest cause.</p>
   </div>
-  <div class="cast" aria-hidden="true"></div>
+  <div class="note">
+    <strong>One test pass</strong>
+    <p>Choose on a dev set, touch the held-out test once, and report every configuration that was run.</p>
+  </div>
+  <div class="note">
+    <strong>Say what failed</strong>
+    <p>Rounds that did not beat the baseline go in the write-up with the reason.</p>
+  </div>
+  <h2 id="also">Also</h2>
+  <p class="also">Flight control for a GPS-denied autonomous drone (ISRO Robotics Challenge, Stage 1 cleared; vision-only position hold in 11 of 12 flight tests). Full-stack platform for IIT Jodhpur's Anand Rathi Tinkering Lab (Next.js, Supabase, role-based row-level security).</p>
 </section>
 
-<section id="scratch" class="work" aria-labelledby="scratch-h">
-  <div class="work-in">
-    <div class="work-text">
-      <h2 id="scratch-h" class="title"><a href="https://github.com/b25bb1004-wq/llm-from-scratch" data-type>llm-from-scratch</a></h2>
-      <p class="claim"><span>micrograd ✓</span><span>makemore in progress</span></p>
-      <div class="work-body">
-        <p>A GPT built from the ground up, one Zero to Hero lecture per folder, each run top to bottom. The autograd engine has tests that caught real bugs.</p>
-        <p class="stack">Built with Python, PyTorch and pytest.</p>
-      </div>
-    </div>
-    <div class="viz-slot"><figure class="viz" data-viz="scratch" role="img" aria-label="Schematic: a small computation graph in the style of micrograd with value nodes, an output and gradients on the edges. micrograd done, makemore in progress."></figure></div>
-  </div>
-  <div class="cast" aria-hidden="true"></div>
-</section>
-
-<section id="method" aria-labelledby="how">
-  <div class="method-in">
-    <h2 id="how">How I work</h2>
-    <ul class="principles">
-      <li><strong>Measure before building</strong><span>Break the errors down by cause first. Compare against a trivial baseline. Fix the biggest cause.</span></li>
-      <li><strong>One test pass</strong><span>Choose on a dev set, touch the held-out test once, and report every configuration that was run.</span></li>
-      <li><strong>Say what failed</strong><span>Rounds that did not beat the baseline go in the write-up with the reason.</span></li>
-    </ul>
-    <h2 id="also">Also</h2>
-    <p class="also">Flight control for a GPS-denied autonomous drone (ISRO Robotics Challenge, Stage 1 cleared; vision-only position hold in 11 of 12 flight tests). Full-stack platform for IIT Jodhpur's Anand Rathi Tinkering Lab (Next.js, Supabase, role-based row-level security).</p>
-  </div>
-  <div class="cast" aria-hidden="true"></div>
-</section>
+<footer id="contact" data-block="notes" aria-label="Contact">
+  <nav class="links" aria-label="Contact links">
+    <a class="primary" href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a>
+    <a href="https://github.com/b25bb1004-wq">GitHub</a>
+    <a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a>
+  </nav>
+  <p>Jodhpur, India. LLM training, evaluation and inference.</p>
+</footer>
 
 </main>
 
-<footer id="contact">
-  <div class="foot-in">
-    <ul class="links">
-      <li class="primary"><a href="https://www.linkedin.com/in/arnav-yadav-403033378/">LinkedIn</a></li>
-      <li><a href="https://github.com/b25bb1004-wq">GitHub</a></li>
-      <li><a href="mailto:arnavyadav3008@gmail.com">arnavyadav3008@gmail.com</a></li>
-    </ul>
-    <p>Jodhpur, India. LLM training, evaluation and inference.</p>
-  </div>
-</footer>
-
+<div id="swarm" aria-hidden="true"></div>
+<canvas id="trails" aria-hidden="true"></canvas>
 </body>
 </html>
